@@ -8,20 +8,13 @@ import java.util.Set;
 /**
  * @author gjoranv
  */
-@SuppressWarnings("UnusedDeclaration") // All public apis are used by model amenders
-public class VespaMetricSet implements MetricSet {
+@SuppressWarnings("UnusedDeclaration") // Used by model amenders
+public class VespaMetricSet extends MetricSet {
 
-    @SuppressWarnings("UnusedDeclaration")
     private static final Set<Metric> vespaMetrics = getVespaMetrics();
 
-    @Override
-    public String getId() {
-        return "vespa";
-    }
-
-    @Override
-    public Set<Metric> getMetrics() {
-        return vespaMetrics;
+    public VespaMetricSet() {
+        super("vespa", vespaMetrics, Collections.emptySet());
     }
 
     private static Set<Metric> getVespaMetrics() {

@@ -1,14 +1,14 @@
 // Copyright 2016 Yahoo Inc. Licensed under the terms of the Apache 2.0 license. See LICENSE in the project root.
 package com.yahoo.vespa.model.admin.monitoring;
 
-import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * This class sets up the default metrics and the default 'vespa' metrics consumer.
  *
- * TODO: remove for Vespa 7
+ * TODO: remove for Vespa 7 or when the 'metric-consumers' element in 'admin' has been removed.
  *
  * @author <a href="mailto:trygve@yahoo-inc.com">Trygve Bolsø Berdal</a>
  * @author gjoranv
@@ -36,15 +36,7 @@ public class DefaultMetricConsumers {
     }
 
     private MetricsConsumer getVespaConsumer(){
-        return new MetricsConsumer("yamas", toMapByName(vespaMetricSet.getMetrics()));
-    }
-
-    private static Map<String, Metric> toMapByName(Collection<Metric> metrics) {
-        Map<String, Metric> metricMap = new LinkedHashMap<>();
-        for (Metric metric : metrics) {
-            metricMap.put(metric.getName(), metric);
-        }
-        return metricMap;
+        return new MetricsConsumer("yamas", vespaMetricSet);
     }
 
 }

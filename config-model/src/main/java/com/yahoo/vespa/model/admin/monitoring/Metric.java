@@ -13,8 +13,15 @@ public class Metric {
 
     private final String name;
     private String outputName;
-    private final Map<String, String> dimensions = new HashMap<>();
+    private final Map<String, String> dimensions;
     private final String description;
+
+    public Metric(String name, String outputName, String description, Map<String, String> dimensions) {
+        this.name = name;
+        this.outputName = outputName;
+        this.dimensions = dimensions;
+        this.description = description;
+    }
 
     /**
      * @param name        The metric name
@@ -22,9 +29,7 @@ public class Metric {
      * @param description The description of this metric
      */
     public Metric(String name, String outputName, String description) {
-        this.name = name;
-        this.outputName = outputName;
-        this.description = description;
+        this(name, outputName, description, new HashMap<>());
     }
 
     /**
