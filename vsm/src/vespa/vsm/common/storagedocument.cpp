@@ -14,7 +14,9 @@ StorageDocument::StorageDocument(document::Document::UP doc, const SharedFieldPa
     _fieldMap(fim),
     _cachedFields(getFieldCount()),
     _backedFields()
-{ }
+{
+    _backedFields.reserve(getFieldCount());
+}
 
 StorageDocument::~StorageDocument() { }
 
@@ -33,10 +35,11 @@ StorageDocument::getComplexField(FieldIdT fId) const
             FieldPath::const_iterator it = fp.begin();
             FieldPath::const_iterator mt = fp.end();
             const document::FieldPathEntry& fvInfo = *it;
-            bool ok = sfv->getValue(fvInfo.getFieldRef(), fvInfo.getFieldValueToSet());
-            if (ok) {
-                SubDocument tmp(&fvInfo.getFieldValueToSet(), it + 1, mt);
+            document::FieldValue::UP fv = sfv->getValue(fvInfo.getFieldRef());
+            if (fv) {
+                SubDocument tmp(fv.get(), it + 1, mt);
                 _cachedFields[fId].swap(tmp);
+                _backedFields.push_back(std::move(fv));
             }
         } else {
           LOG(debug, "Failed getting field fId %d.", fId);
@@ -44,18 +47,6 @@ StorageDocument::getComplexField(FieldIdT fId) const
         }
     }
     return _cachedFields[fId];
-}
-
-void StorageDocument::saveCachedFields() const
-{
-    size_t m(_cachedFields.size());
-    _backedFields.reserve(m);
-    for (size_t i(0); i < m; i++) {
-        if (_cachedFields[i].getFieldValue() != 0) {
-            _backedFields.emplace_back(document::FieldValue::UP(_cachedFields[i].getFieldValue()->clone()));
-            _cachedFields[i].setFieldValue(_backedFields.back().get());
-        }
-    }
 }
 
 const document::FieldValue *

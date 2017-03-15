@@ -937,7 +937,6 @@ SearchVisitor::handleDocument(const StorageDocument::LP & document)
             group(document->docDoc(), rp.getRankScore(), false);
 
             if (amongTheBest) {
-                document->saveCachedFields();
                 needToKeepDocument = true;
             }
 
